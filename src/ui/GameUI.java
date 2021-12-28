@@ -29,12 +29,12 @@ public class GameUI extends javax.swing.JFrame
     boolean key_space = false;
 
     //Object Class Variables
-    ArrayList<enemy> aliens = new ArrayList<enemy>(); // Aliens array
-    ArrayList<laser> laserArrayP = new ArrayList<laser>(); // model.laser Array from model.player
-    ArrayList<laser> laserArrayE = new ArrayList<laser>(); // model.laser array from model.enemy
-    ArrayList<rect> rectAliens = new ArrayList<rect>(); // Collision Box for Aliens
-    ArrayList<rectLaser> rectArrayPL = new ArrayList<rectLaser>(); // Collision Box for Player Lasers
-    ArrayList<rectLaser> rectArrayEL = new ArrayList<rectLaser>(); // Collision Box for Enemy Lasers
+    ArrayList<enemy> aliens = new ArrayList<>(); // Aliens array
+    ArrayList<laser> laserArrayP = new ArrayList<>(); // model.laser Array from model.player
+    ArrayList<laser> laserArrayE = new ArrayList<>(); // model.laser array from model.enemy
+    ArrayList<rect> rectAliens = new ArrayList<>(); // Collision Box for Aliens
+    ArrayList<rectLaser> rectArrayPL = new ArrayList<>(); // Collision Box for Player Lasers
+    ArrayList<rectLaser> rectArrayEL = new ArrayList<>(); // Collision Box for Enemy Lasers
     public int numEnemiesX = 8; //# Columns
     public int numEnemiesY = 4; //# Rows
     int totalEnemies = numEnemiesX * numEnemiesY; //total enemies in game
@@ -75,7 +75,6 @@ public class GameUI extends javax.swing.JFrame
         ibg = ib.getGraphics();
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -125,27 +124,15 @@ public class GameUI extends javax.swing.JFrame
         jMenu1.setText("Game");
 
         buttonStart.setText("Start");
-        buttonStart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStartActionPerformed(evt);
-            }
-        });
+        buttonStart.addActionListener(evt -> buttonStartActionPerformed(evt));
         jMenu1.add(buttonStart);
 
         buttonPause.setText("Pause");
-        buttonPause.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPauseActionPerformed(evt);
-            }
-        });
+        buttonPause.addActionListener(this::buttonPauseActionPerformed);
         jMenu1.add(buttonPause);
 
         buttonStop.setText("Stop");
-        buttonStop.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStopActionPerformed(evt);
-            }
-        });
+        buttonStop.addActionListener(this::buttonStopActionPerformed);
         jMenu1.add(buttonStop);
 
         jMenuBar2.add(jMenu1);
@@ -153,19 +140,11 @@ public class GameUI extends javax.swing.JFrame
         jMenu2.setText("Help");
 
         buttonControls.setText("Controls");
-        buttonControls.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonControlsActionPerformed(evt);
-            }
-        });
+        buttonControls.addActionListener(this::buttonControlsActionPerformed);
         jMenu2.add(buttonControls);
 
         buttonManual.setText("Manual");
-        buttonManual.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonManualActionPerformed(evt);
-            }
-        });
+        buttonManual.addActionListener(this::buttonManualActionPerformed);
         jMenu2.add(buttonManual);
 
         jMenuBar2.add(jMenu2);
@@ -279,9 +258,9 @@ public class GameUI extends javax.swing.JFrame
         //Draws each individual alien from the arraylist if they exist
         //Draws in the middle of the sprite
         if (aliens.size() > 0) {
-            for (int k = 0; k < aliens.size(); k++) {
-                if (aliens.get(k) != null) {
-                    ibg.drawImage(enemyImage(), aliens.get(k).x - 15, aliens.get(k).y - 15, null);
+            for (enemy alien : aliens) {
+                if (alien != null) {
+                    ibg.drawImage(enemyImage(), alien.x - 15, alien.y - 15, null);
                     //comment this line out if you don't want to see the alien hit boxes
                     //ibg.drawRect(aliens.get(k).x-15, aliens.get(k).y-15, 30, 30);
                 }
@@ -289,14 +268,14 @@ public class GameUI extends javax.swing.JFrame
         }
         //Draws the lasers (if they exist) and from the middle of the model.laser
         if (laserArrayP.size() > 0) {
-            for (int k = 0; k < laserArrayP.size(); k++) {
-                ibg.drawImage(laserImage(), laserArrayP.get(k).x - 1, laserArrayP.get(k).y - 7, null);
+            for (model.laser laser : laserArrayP) {
+                ibg.drawImage(laserImage(), laser.x - 1, laser.y - 7, null);
             }
         }
         //Draws the lasers from the model.enemy (if they exist) and from the middle of the model.laser
         if (laserArrayE.size() > 0) {
-            for (int k = 0; k < laserArrayE.size(); k++) {
-                ibg.drawImage(laserImage(), laserArrayE.get(k).x - 1, laserArrayE.get(k).y - 7, null);
+            for (model.laser laser : laserArrayE) {
+                ibg.drawImage(laserImage(), laser.x - 1, laser.y - 7, null);
             }
         }
 
@@ -391,7 +370,7 @@ public class GameUI extends javax.swing.JFrame
     public void shootLasersE() {
         if (laserArrayE.size() >= 0 && laserArrayE.size() < 8) {
             int size = aliens.size();
-            int rand = (int) (Math.random() * size) + 0;
+            int rand = (int) (Math.random() * size);
             if (aliens.get(rand) != null) {
                 laser newLaserE = new laser(aliens.get(rand).x, aliens.get(rand).y);
                 rectLaser newLaserRectE = new rectLaser(aliens.get(rand).x, aliens.get(rand).y);
@@ -452,10 +431,10 @@ public class GameUI extends javax.swing.JFrame
             if (aliens.get(f) != null) {
                 enemy position = aliens.get(f);
                 rect pos = rectAliens.get(f);
-                if (position.right == true && position.left == false) {
+                if (position.right && !position.left) {
                     position.increaseX(shifterX);
                     pos.x = position.x - 15;
-                } else if (position.right == false || position.left == true) {
+                } else if (!position.right || position.left) {
                     position.decreaseX(shifterX);
                     pos.x = position.x - 15;
                 }
@@ -543,21 +522,21 @@ public class GameUI extends javax.swing.JFrame
 
     //Keyboard bindings
     public void keyboardCheck() {
-        if (key_d == true) {
+        if (key_d) {
             if (user.x >= 535) {
                 user.x = 535;
             } else {
                 user.moveRight();
             }
         }
-        if (key_a == true)
+        if (key_a)
             if (user.x <= 15) {
                 user.x = 15;
             } else {
                 user.moveLeft();
             }
-        if (key_space == true) {
-            if (enableShoot == true) {
+        if (key_space) {
+            if (enableShoot) {
                 shootLaser();
                 enableShoot = false;
                 key_space = false;
@@ -572,13 +551,13 @@ public class GameUI extends javax.swing.JFrame
      * then just ask if statements about the keys and you don't have to use the booleans.  */
     public boolean dispatchKeyEvent(KeyEvent e) {
         if (e.getID() == KeyEvent.KEY_PRESSED) {
-            if (e.getKeyCode() == e.VK_D) key_d = true;
-            else if (e.getKeyCode() == e.VK_A) key_a = true;
-            else if (e.getKeyCode() == e.VK_SPACE) key_space = true;
+            if (e.getKeyCode() == KeyEvent.VK_D) key_d = true;
+            else if (e.getKeyCode() == KeyEvent.VK_A) key_a = true;
+            else if (e.getKeyCode() == KeyEvent.VK_SPACE) key_space = true;
         } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-            if (e.getKeyCode() == e.VK_D) key_d = false;
-            else if (e.getKeyCode() == e.VK_A) key_a = false;
-            else if (e.getKeyCode() == e.VK_SPACE) key_space = false;
+            if (e.getKeyCode() == KeyEvent.VK_D) key_d = false;
+            else if (e.getKeyCode() == KeyEvent.VK_A) key_a = false;
+            else if (e.getKeyCode() == KeyEvent.VK_SPACE) key_space = false;
         }
         return false;
     }
@@ -603,14 +582,10 @@ public class GameUI extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonManualActionPerformed
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GameUI().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new GameUI().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
