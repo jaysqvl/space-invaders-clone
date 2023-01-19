@@ -1,4 +1,4 @@
-# java-space-invaders
+# Space Invaders Remake
 My basic rendition on Space Invaders using basic libraries.
 
 # Things to be accomplished:
