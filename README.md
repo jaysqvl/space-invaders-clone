@@ -1,6 +1,5 @@
-# java-space-invaders
+# Space Invaders Remake
 My basic rendition on Space Invaders using basic libraries.
-Unfinished and unorganized code that needs work.
 
 # Things to be accomplished:
  	- Menu buttons need to work  
