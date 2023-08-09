@@ -1,4 +1,4 @@
-# Space Invaders Remake
+# Space Invaders Clone
 My rendition of Space Invaders in Java limited only to standard libraries.
 
 ## Instructions
